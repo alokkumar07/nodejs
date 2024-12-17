@@ -8,8 +8,7 @@
 //     callback()
 // }
 
-// add(1,3,callback) 
-
+// add(1,3,callback)
 
 // const add = function(a,b,alok){
 //     var result = a +b;
@@ -21,7 +20,6 @@
 //     console.log("welcome to alok")
 // })
 
-
 // const add = function(a,b,alok){
 //     var result = a +b;
 //     console.log(result,"result")
@@ -29,7 +27,6 @@
 // }
 
 // add(2,3,()=>console.log("welcome to alok"))
-
 
 // var fs = require("fs");
 // var os = require("os");
@@ -46,7 +43,6 @@
 
 // var age = notes.age;
 
-
 // var res = notes.addNumber(age,10)
 // console.log(res)
 
@@ -56,18 +52,20 @@
 // var filter =_.uniq(data)
 // console.log(filter)
 
-const express = require('express')
-const app = express()
-const db = require("./db")
-const bodyParser = require('body-parser')
-app.use(bodyParser.json())
-const Person = require("./models/Person")
-const MenuItem = require("./models/menu")
+const express = require("express");
+const app = express();
+const db = require("./db");
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+const passport = require("./auth");
+
+const Person = require("./models/Person");
+const MenuItem = require("./models/menu");
 
 
-app.get('/', function (req, res) {
-  res.send('welcome to bihari hotel..how i can i help you')
-})
+app.get("/", function (req, res) {
+  res.send("welcome to bihari hotel..how i can i help you");
+});
 
 // app.get("/chicken",(req,res)=>{
 //     var customized_chicken ={
@@ -79,19 +77,31 @@ app.get('/', function (req, res) {
 //     res.send(customized_chicken)
 // })
 
+//Middleware function
+
+const logRequest = (req, res, next) => {
+  console.log(
+    `[${new Date().toLocaleString()}] Request Made to : ${req.originalUrl}`
+  );
+  next(); //Move on to next phase
+};
+app.use(logRequest);
 
 
 
+app.use(passport.initialize());
+const localAuthMiddleware = passport.authenticate('local', {session: false})
 
+app.get("/",localAuthMiddleware, function (req, res) {
+  res.send("welcome to our hotel");
+});
 
-const personRoutes = require('./routes/personRoutes')
-app.use('/person',personRoutes)
+const personRoutes = require("./routes/personRoutes");
+app.use("/person",localAuthMiddleware, personRoutes);
 
-const menuRoutes = require('./routes/menuRoutes')
-app.use('/menu',menuRoutes)
+const menuRoutes = require("./routes/menuRoutes");
+app.use("/menu", menuRoutes);
 
-
-
-app.listen(3000, ()=>{
-    console.log('listening on port 3000')
-})
+app.listen(3000, () => {
+  console.log("listening on port 3000");
+});
