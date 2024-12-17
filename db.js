@@ -1,13 +1,18 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
-const mongoURL = "mongodb://127.0.0.1:27017/hotels";
+
+// const mongoURL = MONGODB_URL_LOCAL
 // const mongoURL = "mongodb+srv://alok07:zLKjW7yl7ZaCkv1x@cluster0.n7clvy9.mongodb.net/";
+const mongoURL =process.env.MONGODB_URL
+
+
 
 mongoose.connect(mongoURL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-//   useCreateIndex: true,
-//   useFindAndModify: false,
+  // useCreateIndex: true,
+  // useFindAndModify: false,
 });
 
 const db = mongoose.connection;

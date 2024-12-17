@@ -58,6 +58,9 @@ const db = require("./db");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 const passport = require("./auth");
+require('dotenv').config();
+const PORT = process.env.PORT || 3000;
+
 
 const Person = require("./models/Person");
 const MenuItem = require("./models/menu");
@@ -97,11 +100,11 @@ app.get("/",localAuthMiddleware, function (req, res) {
 });
 
 const personRoutes = require("./routes/personRoutes");
-app.use("/person",localAuthMiddleware, personRoutes);
+app.use("/person", personRoutes);
 
 const menuRoutes = require("./routes/menuRoutes");
 app.use("/menu", menuRoutes);
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log("listening on port 3000");
 });

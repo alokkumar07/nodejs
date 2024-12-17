@@ -30,11 +30,11 @@ const personSchema = new mongoose.Schema({
     type: Number,
   },
   username: {
-    required: true,
+    // required: true,
     type: String,
   },
   password: {
-    required: true,
+    // required: true,
     type: String,
   },
 });
